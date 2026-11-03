@@ -1,5 +1,7 @@
 # il-showtimes
 
+[![tests](https://github.com/marikbrest/il-showtimes/actions/workflows/tests.yml/badge.svg)](https://github.com/marikbrest/il-showtimes/actions/workflows/tests.yml)
+
 Unofficial, **read-only** Python helpers for two everyday Israeli lookups:
 
 - **Cinema showtimes** for Cinema City and Planet. One call covers both chains: `showtimes.search("ראשל\"צ", date)`.
@@ -9,16 +11,66 @@ It returns times and links. **It never books, never logs in and never pays.** Yo
 
 עברית בקצרה: כלי קוד פתוח, לא רשמי ולא מסחרי, שמחפש שעות הקרנה בסינמה סיטי ובפלאנט ומקומות פנויים במסעדות ב-Ontopo ומחזיר קישור לאתר הרשמי. אין הזמנה אוטומטית. השימוש באחריותך בלבד (ראו להלן).
 
+## Install
+
+Requires Python 3.10+. Not published on PyPI; install from a clone:
+
 ```bash
+git clone https://github.com/marikbrest/il-showtimes && cd il-showtimes
 pip install -e .
+```
+
+## Command line
+
+```bash
 il-showtimes "חיפה" 2026-11-07 --after 19:00
 il-showtimes 'ראשל"צ' 2026-11-07 --movie "אובססיה" --chain cinemacity
 ```
 
-```python
-from il_showtimes import ontopo
-ontopo.find_available("תל אביב", "2026-11-07", "20:00", 2)   # restaurants with a table, plus booking links
+Example output (Planet, Haifa):
+
+```text
+— פלאנט חיפה [ok]
+• קלייפייס
+    21:00 ScreenX 3  https://tickets5.planetcinema.co.il/order/352938?lang=he-IL
+    21:30 אולם 6  https://tickets5.planetcinema.co.il/order/353537?lang=he-IL
 ```
+
+The first Cinema City run downloads the whole schedule (a couple of minutes, 12 s between pages) and caches it locally.
+
+## Python
+
+```python
+from datetime import date
+from il_showtimes import showtimes, ontopo
+
+sections = showtimes.search("חיפה", date(2026, 11, 7), movie="", after="19:00", chain="")
+ontopo.find_available("תל אביב", "2026-11-07", "20:00", 2)   # restaurants with a table + booking links
+```
+
+`showtimes.search(place, day, movie="", after="00:00", chain="")` returns one section per matching branch. `chain` is `""` (both), `"cinemacity"` or `"planet"`. It raises `showtimes.PlaceNotFoundError` for an unknown place. A failing chain never hides the other.
+
+```python
+[{
+  "chain": "planet",                 # or "cinemacity"
+  "branch": "חיפה",
+  "status": "ok",                    # "ok" | "loading" (Cinema City schedule still downloading)
+                                     # | "not_published" (day beyond what Cinema City has published) | "error"
+  "until": None,                     # last day Cinema City has published, when known
+  "movies": [{
+    "title": "קלייפייס",
+    "link": None,                    # Cinema City: movie page; Planet: None (use each show's url)
+    "shows": [{
+      "time": "21:00",
+      "hall": "ScreenX 3",
+      "free_ratio": 1.0,             # Planet only: approximate share of free seats (0..1); None at Cinema City
+      "url": "https://tickets5.planetcinema.co.il/order/352938?lang=he-IL",   # Planet only
+    }],
+  }],
+}]
+```
+
+`ontopo.find_available(city, day, time, party_size)` returns `{"city", "date", "time", "party_size", "total", "venues": [{"name", "slots": [{"time", "status", "areas"}], "booking_url"}]}`. `ontopo.check_availability(venue, day, time, party_size)` and `ontopo.check_range(...)` cover one venue, optionally over several days. Booking links open Ontopo with the date, time and party size pre-filled.
 
 ## Disclaimer and use at your own risk
 
