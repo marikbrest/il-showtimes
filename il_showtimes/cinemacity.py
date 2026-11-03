@@ -22,6 +22,8 @@ from zoneinfo import ZoneInfo
 
 import httpx
 
+from il_showtimes import USER_AGENT
+
 
 
 SITE = "https://www.cinema-city.co.il"
@@ -194,7 +196,7 @@ def fetch_presentations(client: "httpx.Client | None" = None, sleep=time.sleep, 
     Raises CinemaCityError on any failure.
     """
     own = client is None
-    client = client or httpx.Client(timeout=30.0, headers={"User-Agent": "Mozilla/5.0"})
+    client = client or httpx.Client(timeout=30.0, headers={"User-Agent": USER_AGENT})
     try:
         tokens = client.get(f"{SITE}/_api/v1/access-tokens")
         tokens.raise_for_status()

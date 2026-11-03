@@ -19,7 +19,7 @@ import httpx
 
 BASE = "https://www.planetcinema.co.il/il/data-api-service/v1/quickbook/10100"
 BOOKING = "https://tickets5.planetcinema.co.il/order/{event_id}?lang=he-IL"
-UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Safari/537.36"
+from il_showtimes import USER_AGENT as UA
 DAY_TTL_SECONDS = 600
 MAX_SHOWTIMES = 10
 

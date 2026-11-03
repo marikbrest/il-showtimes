@@ -16,7 +16,9 @@ from datetime import date as _date, datetime, timedelta
 
 import httpx
 
-_client = httpx.Client(timeout=15.0, limits=httpx.Limits(max_keepalive_connections=2, keepalive_expiry=60.0))
+from il_showtimes import USER_AGENT
+
+_client = httpx.Client(timeout=15.0, headers={"User-Agent": USER_AGENT}, limits=httpx.Limits(max_keepalive_connections=2, keepalive_expiry=60.0))
 
 BASE_URL = "https://ontopo.com/api"
 ISRAEL_DISTRIBUTOR_SLUG = "15171493"  # required by venue_search
