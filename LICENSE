@@ -1,11 +1,7 @@
 MIT License
 
 Copyright (c) 2026 Marik Brestovitsky
-
-This project includes code derived from agent-skill-ontopo
-(https://github.com/alexpolonsky/agent-skill-ontopo), used under its MIT license:
-
-Copyright (c) 2026 Alex Polonsky
+Copyright (c) 2026 Alex Polonsky (code derived from agent-skill-ontopo, https://github.com/alexpolonsky/agent-skill-ontopo)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
