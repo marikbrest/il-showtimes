@@ -1,7 +1,7 @@
 """
 Restaurant search and table availability via Ontopo (ontopo.com), read-only.
 
-Derived from the MIT-licensed agent-skill-ontopo by Alex Polonsky
+Derived from the MIT-licensed agent-skill-ontopo by Alex Polonsky (copyright notice in LICENSE)
 (https://github.com/alexpolonsky/agent-skill-ontopo). Unofficial: it calls the
 same API the Ontopo website uses, so it may change or break without notice.
 
